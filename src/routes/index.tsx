@@ -105,10 +105,10 @@ function JerseyCard({ jersey }: { jersey: Jersey }) {
 }
 
 function Index() {
-  const [activeEra, setActiveEra] = useState<Era>("All Eras");
+  const [activeEra, setActiveEra] = useState<Era>("All Leagues");
 
   const filtered = useMemo(
-    () => (activeEra === "All Eras" ? jerseys : jerseys.filter((j) => j.era === activeEra)),
+    () => (activeEra === "All Leagues" ? jerseys : jerseys.filter((j) => j.era === activeEra)),
     [activeEra],
   );
 
