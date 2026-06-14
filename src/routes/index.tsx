@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import heroCrest from "@/assets/hero-crest.jpg";
 import { jerseys, leagues, type League, type Jersey } from "@/data/jerseys";
@@ -105,16 +105,82 @@ function JerseyCard({ jersey }: { jersey: Jersey }) {
   );
 }
 
+function uniqueSorted(values: string[]) {
+  return Array.from(new Set(values)).sort((a, b) => a.localeCompare(b));
+}
+
 function Index() {
   const [activeLeague, setActiveLeague] = useState<League>("All Leagues");
+  const [teamFilter, setTeamFilter] = useState("All Teams");
+  const [typeFilter, setTypeFilter] = useState("All Types");
+  const [seasonFilter, setSeasonFilter] = useState("All Seasons");
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const filtered = useMemo(
+  const isLeagueSelected = activeLeague !== "All Leagues";
+
+  const leagueItems = useMemo(
     () =>
-      activeLeague === "All Leagues"
-        ? jerseys
-        : jerseys.filter((j) => j.league === activeLeague),
-    [activeLeague],
+      isLeagueSelected ? jerseys.filter((j) => j.league === activeLeague) : jerseys,
+    [activeLeague, isLeagueSelected],
   );
+
+  const teamOptions = useMemo(
+    () => uniqueSorted(leagueItems.map((j) => j.team)),
+    [leagueItems],
+  );
+  const typeOptions = useMemo(
+    () => uniqueSorted(leagueItems.map((j) => j.type)),
+    [leagueItems],
+  );
+  const seasonOptions = useMemo(
+    () => uniqueSorted(leagueItems.map((j) => j.season)).reverse(),
+    [leagueItems],
+  );
+
+  useEffect(() => {
+    setTeamFilter("All Teams");
+    setTypeFilter("All Types");
+    setSeasonFilter("All Seasons");
+    setSearchTerm("");
+  }, [activeLeague]);
+
+  const filtered = useMemo(() => {
+    if (!isLeagueSelected) return leagueItems;
+
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+
+    return leagueItems.filter((jersey) => {
+      const matchesTeam = teamFilter === "All Teams" || jersey.team === teamFilter;
+      const matchesType = typeFilter === "All Types" || jersey.type === typeFilter;
+      const matchesSeason = seasonFilter === "All Seasons" || jersey.season === seasonFilter;
+      const searchableText = [
+        jersey.name,
+        jersey.team,
+        jersey.type,
+        jersey.season,
+        jersey.inventory,
+        jersey.notes,
+      ]
+        .join(" ")
+        .toLowerCase();
+      const matchesSearch = !normalizedSearch || searchableText.includes(normalizedSearch);
+
+      return matchesTeam && matchesType && matchesSeason && matchesSearch;
+    });
+  }, [isLeagueSelected, leagueItems, searchTerm, seasonFilter, teamFilter, typeFilter]);
+
+  const hasAdvancedFilters =
+    teamFilter !== "All Teams" ||
+    typeFilter !== "All Types" ||
+    seasonFilter !== "All Seasons" ||
+    searchTerm.trim().length > 0;
+
+  const clearAdvancedFilters = () => {
+    setTeamFilter("All Teams");
+    setTypeFilter("All Types");
+    setSeasonFilter("All Seasons");
+    setSearchTerm("");
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -174,32 +240,107 @@ function Index() {
         className="py-24 bg-vault-surface/30 ring-1 ring-white/5 scroll-mt-24"
       >
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-baseline mb-16 gap-8">
-            <h2 className="text-3xl font-display leading-tight">Archive Index</h2>
-            <div className="flex flex-wrap gap-3">
-              {leagues.map((league) => {
-                const isActive = league === activeLeague;
-                return (
-                  <button
-                    key={league}
-                    onClick={() => setActiveLeague(league)}
-                    className={
-                      "px-4 py-2 ring-1 rounded-sm text-sm transition-colors " +
-                      (isActive
-                        ? "ring-heritage-red text-foreground bg-heritage-red/10"
-                        : "ring-vault-line text-vault-muted hover:text-foreground")
-                    }
-                  >
-                    {league}
-                  </button>
-                );
-              })}
+          <div className="flex flex-col gap-8 mb-16">
+            <div className="flex flex-col md:flex-row justify-between items-baseline gap-8">
+              <div className="space-y-3">
+                <h2 className="text-3xl font-display leading-tight">Archive Index</h2>
+                <p className="text-sm text-vault-muted">
+                  {filtered.length} of {leagueItems.length} jerseys shown
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                {leagues.map((league) => {
+                  const isActive = league === activeLeague;
+                  return (
+                    <button
+                      key={league}
+                      onClick={() => setActiveLeague(league)}
+                      className={
+                        "px-4 py-2 ring-1 rounded-sm text-sm transition-colors " +
+                        (isActive
+                          ? "ring-heritage-red text-foreground bg-heritage-red/10"
+                          : "ring-vault-line text-vault-muted hover:text-foreground")
+                      }
+                    >
+                      {league}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
+
+            {isLeagueSelected && (
+              <div className="border-y border-vault-line/60 py-6">
+                <div className="flex flex-col gap-5 lg:flex-row lg:items-end">
+                  <label className="flex flex-1 min-w-[220px] flex-col gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-vault-faint">
+                    Search
+                    <input
+                      type="search"
+                      value={searchTerm}
+                      onChange={(event) => setSearchTerm(event.target.value)}
+                      placeholder="Name, team, season, code"
+                      className="h-11 rounded-sm bg-background px-3 text-sm normal-case tracking-normal text-foreground ring-1 ring-vault-line outline-none transition-colors placeholder:text-vault-faint focus:ring-heritage-red"
+                    />
+                  </label>
+
+                  <label className="flex min-w-[160px] flex-col gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-vault-faint">
+                    Team
+                    <select
+                      value={teamFilter}
+                      onChange={(event) => setTeamFilter(event.target.value)}
+                      className="h-11 rounded-sm bg-background px-3 text-sm normal-case tracking-normal text-foreground ring-1 ring-vault-line outline-none transition-colors focus:ring-heritage-red"
+                    >
+                      <option>All Teams</option>
+                      {teamOptions.map((team) => (
+                        <option key={team}>{team}</option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="flex min-w-[150px] flex-col gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-vault-faint">
+                    Type
+                    <select
+                      value={typeFilter}
+                      onChange={(event) => setTypeFilter(event.target.value)}
+                      className="h-11 rounded-sm bg-background px-3 text-sm normal-case tracking-normal text-foreground ring-1 ring-vault-line outline-none transition-colors focus:ring-heritage-red"
+                    >
+                      <option>All Types</option>
+                      {typeOptions.map((type) => (
+                        <option key={type}>{type}</option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="flex min-w-[160px] flex-col gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-vault-faint">
+                    Season
+                    <select
+                      value={seasonFilter}
+                      onChange={(event) => setSeasonFilter(event.target.value)}
+                      className="h-11 rounded-sm bg-background px-3 text-sm normal-case tracking-normal text-foreground ring-1 ring-vault-line outline-none transition-colors focus:ring-heritage-red"
+                    >
+                      <option>All Seasons</option>
+                      {seasonOptions.map((season) => (
+                        <option key={season}>{season}</option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <button
+                    type="button"
+                    onClick={clearAdvancedFilters}
+                    disabled={!hasAdvancedFilters}
+                    className="h-11 px-4 rounded-sm text-sm ring-1 ring-vault-line text-vault-muted transition-colors enabled:hover:text-foreground enabled:hover:ring-heritage-red disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    Clear Filters
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {filtered.length === 0 ? (
             <p className="text-vault-muted font-display italic">
-              No artifacts catalogued under this league yet.
+              No artifacts match those filters yet.
             </p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
