@@ -254,6 +254,7 @@ function JerseyDetail() {
 
           </div>
         </div>
+      </div>
       </section>
     </div>
   );
