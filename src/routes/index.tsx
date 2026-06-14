@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import heroCrest from "@/assets/hero-crest.jpg";
-import { jerseys, eras, type Era, type Jersey } from "@/data/jerseys";
+import { jerseys, leagues, type League, type Jersey } from "@/data/jerseys";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -96,6 +96,7 @@ function JerseyCard({ jersey }: { jersey: Jersey }) {
         <p className="text-sm text-vault-muted text-pretty max-w-[48ch]">{jersey.notes}</p>
         <div className="pt-4 flex flex-wrap gap-6 text-[10px] uppercase tracking-widest font-semibold text-vault-faint border-t border-vault-line/60">
           <span>Team: {jersey.team}</span>
+          <span>League: {jersey.league}</span>
           <span>Type: {jersey.type}</span>
           <span className="font-mono normal-case tracking-wider">{jersey.inventory}</span>
         </div>
@@ -105,11 +106,14 @@ function JerseyCard({ jersey }: { jersey: Jersey }) {
 }
 
 function Index() {
-  const [activeEra, setActiveEra] = useState<Era>("All Leagues");
+  const [activeLeague, setActiveLeague] = useState<League>("All Leagues");
 
   const filtered = useMemo(
-    () => (activeEra === "All Leagues" ? jerseys : jerseys.filter((j) => j.era === activeEra)),
-    [activeEra],
+    () =>
+      activeLeague === "All Leagues"
+        ? jerseys
+        : jerseys.filter((j) => j.league === activeLeague),
+    [activeLeague],
   );
 
   return (
@@ -128,7 +132,7 @@ function Index() {
         </div>
         <div className="bg-vault-surface/40 py-3">
           <div className="max-w-7xl mx-auto px-6 flex flex-wrap gap-6 text-[10px] uppercase tracking-[0.2em] text-vault-faint">
-            <span>Active filter: {activeEra}</span>
+            <span>Active league: {activeLeague}</span>
             <span>Items: {jerseys.length}</span>
             <span className="hidden sm:inline">Location: Climate Controlled Vault</span>
           </div>
@@ -183,12 +187,12 @@ function Index() {
           <div className="flex flex-col md:flex-row justify-between items-baseline mb-16 gap-8">
             <h2 className="text-3xl font-display leading-tight">Archive Index</h2>
             <div className="flex flex-wrap gap-3">
-              {eras.map((era) => {
-                const isActive = era === activeEra;
+              {leagues.map((league) => {
+                const isActive = league === activeLeague;
                 return (
                   <button
-                    key={era}
-                    onClick={() => setActiveEra(era)}
+                    key={league}
+                    onClick={() => setActiveLeague(league)}
                     className={
                       "px-4 py-2 ring-1 rounded-sm text-sm transition-colors " +
                       (isActive
@@ -196,7 +200,7 @@ function Index() {
                         : "ring-vault-line text-vault-muted hover:text-foreground")
                     }
                   >
-                    {era}
+                    {league}
                   </button>
                 );
               })}
@@ -205,7 +209,7 @@ function Index() {
 
           {filtered.length === 0 ? (
             <p className="text-vault-muted font-display italic">
-              No artifacts catalogued under this era — yet.
+              No artifacts catalogued under this league yet.
             </p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
