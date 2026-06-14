@@ -252,39 +252,14 @@ function Index() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
               {filtered.map((j) => (
-                <button
+                <JerseyCard
                   key={j.id}
-                  onClick={() => {
+                  jersey={j}
+                  onSelect={() => {
                     setActiveId(j.id);
                     document.getElementById("exhibit")?.scrollIntoView({ behavior: "smooth" });
                   }}
-                  className="flex flex-col gap-6 text-left group"
-                >
-                  <div className="w-full aspect-[4/5] bg-vault-surface outline-1 -outline-offset-1 outline-white/5 rounded-[min(1vw,12px)] overflow-hidden">
-                    <img
-                      src={j.image}
-                      alt={`${j.team} ${j.season} ${j.type} jersey`}
-                      width={1024}
-                      height={1280}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-                    />
-                  </div>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-start gap-4">
-                      <h3 className="text-xl font-medium tracking-tight">{j.name}</h3>
-                      <span className="text-[10px] font-mono text-vault-faint uppercase whitespace-nowrap pt-1">
-                        {j.season}
-                      </span>
-                    </div>
-                    <p className="text-sm text-vault-muted text-pretty max-w-[48ch]">{j.notes}</p>
-                    <div className="pt-4 flex flex-wrap gap-6 text-[10px] uppercase tracking-widest font-semibold text-vault-faint border-t border-vault-line/60">
-                      <span>Team: {j.team}</span>
-                      <span>Type: {j.type}</span>
-                      <span className="font-mono normal-case tracking-wider">{j.inventory}</span>
-                    </div>
-                  </div>
-                </button>
+                />
               ))}
             </div>
           )}
