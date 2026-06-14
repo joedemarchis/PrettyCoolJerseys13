@@ -18,7 +18,7 @@ export const Route = createFileRoute("/")({
         content:
           "A preservation study of authentic and replica hockey jerseys, from heavy-knit wool to modern reverse retros.",
       },
-      { property: "og:title", content: "The Stitched Archive — A Hockey Jersey Collection" },
+      { property: "og:title", content: "Pretty Cool Jerseys — A Hockey Jersey Collection" },
       {
         property: "og:description",
         content:
