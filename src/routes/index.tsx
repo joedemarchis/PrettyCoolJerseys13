@@ -37,7 +37,7 @@ function JerseyCard({ jersey }: { jersey: Jersey }) {
       params={{ jerseyId: jersey.id }}
       className="flex flex-col gap-6 text-left group cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-heritage-red rounded-[min(1vw,12px)]"
     >
-      <div className="relative w-full aspect-[4/5] bg-vault-surface outline-1 -outline-offset-1 outline-white/5 rounded-[min(1vw,12px)] overflow-hidden">
+      <div className="relative w-full aspect-[4/5] bg-vault-surface outline-1 -outline-offset-1 outline-vault-text/5 rounded-[min(1vw,12px)] overflow-hidden">
         <img
           src={jersey.images[idx]}
           alt={`${jersey.team} ${jersey.season} ${jersey.type} jersey — view ${idx + 1}`}
@@ -217,7 +217,7 @@ function Index() {
               alt="Macro detail of a vintage hockey jersey crest under low light"
               width={1920}
               height={1024}
-              className="w-full aspect-[21/9] object-cover bg-vault-surface outline-1 -outline-offset-1 outline-white/5 rounded-[min(1vw,12px)]"
+              className="w-full aspect-[21/9] object-cover bg-vault-surface outline-1 -outline-offset-1 outline-vault-text/5 rounded-[min(1vw,12px)]"
             />
             <div className="absolute bottom-6 left-6 text-[10px] font-medium uppercase tracking-[0.15em] text-vault-faint">
               Plate No. 001 — Red Army Exhibition
@@ -237,7 +237,7 @@ function Index() {
       {/* Grid */}
       <section
         id="collection"
-        className="py-24 bg-vault-surface/30 ring-1 ring-white/5 scroll-mt-24"
+        className="py-24 bg-vault-surface/30 ring-1 ring-vault-text/5 scroll-mt-24"
       >
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col gap-8 mb-16">
