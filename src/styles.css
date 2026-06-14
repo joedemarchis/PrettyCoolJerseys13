@@ -47,13 +47,13 @@
 :root {
   --radius: 0.5rem;
 
-  /* Vault palette (dark zinc base) */
-  --vault: oklch(0.16 0.005 264);          /* ~zinc-950 */
-  --vault-surface: oklch(0.22 0.006 264);  /* ~zinc-900 */
-  --vault-line: oklch(0.28 0.006 264);     /* ~zinc-800 */
-  --vault-text: oklch(0.92 0.005 264);     /* ~zinc-200 */
-  --vault-muted: oklch(0.62 0.008 264);    /* ~zinc-400 */
-  --vault-faint: oklch(0.45 0.008 264);    /* ~zinc-500 */
+  /* Vault palette (warm cream base) */
+  --vault: oklch(0.96 0.015 85);           /* warm cream */
+  --vault-surface: oklch(0.92 0.012 85);   /* slightly darker cream */
+  --vault-line: oklch(0.82 0.01 85);      /* warm light border */
+  --vault-text: oklch(0.18 0.01 264);     /* near-black for text */
+  --vault-muted: oklch(0.45 0.015 264);    /* medium-dark gray */
+  --vault-faint: oklch(0.55 0.012 264);    /* lighter muted gray */
 
   --heritage-red: oklch(0.45 0.16 25);     /* #991b1b vibe */
   --heritage-blue: oklch(0.36 0.13 264);   /* #1e3a8a vibe */
