@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import heroCrest from "@/assets/hero-crest.jpg";
 import jerseyRangers from "@/assets/jersey-rangers.jpg";
 import jerseyCanadiens from "@/assets/jersey-canadiens.jpg";
