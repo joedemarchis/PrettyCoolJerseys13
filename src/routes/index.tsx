@@ -167,7 +167,7 @@ function Index() {
         <div className="max-w-7xl mx-auto px-6 flex flex-col gap-12">
           <div className="space-y-6">
             <span className="inline-block px-3 py-1 ring-1 ring-vault-line rounded-full text-[10px] uppercase tracking-widest font-medium text-vault-faint">
-              Featured Artifact
+              FEATURED JERSEY
             </span>
             <h1 className="text-5xl md:text-7xl font-display italic leading-tight text-balance max-w-[20ch]">
               The 1972 Summit Series Authentics
