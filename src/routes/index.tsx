@@ -123,6 +123,91 @@ const jerseys: Jersey[] = [
 
 const eras: Era[] = ["All Eras", "Original Six", "Expansion Era", "WHA Years", "Modern Classics"];
 
+function JerseyCard({ jersey, onSelect }: { jersey: Jersey; onSelect: () => void }) {
+  const [idx, setIdx] = useState(0);
+  const count = jersey.images.length;
+  const go = (delta: number) => setIdx((i) => (i + delta + count) % count);
+
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={onSelect}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onSelect();
+        }
+      }}
+      className="flex flex-col gap-6 text-left group cursor-pointer focus:outline-none focus-visible:ring-1 focus-visible:ring-heritage-red rounded-[min(1vw,12px)]"
+    >
+      <div className="relative w-full aspect-[4/5] bg-vault-surface outline-1 -outline-offset-1 outline-white/5 rounded-[min(1vw,12px)] overflow-hidden">
+        <img
+          src={jersey.images[idx]}
+          alt={`${jersey.team} ${jersey.season} ${jersey.type} jersey — view ${idx + 1}`}
+          width={1024}
+          height={1280}
+          loading="lazy"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+        />
+        {count > 1 && (
+          <>
+            <button
+              type="button"
+              aria-label="Previous image"
+              onClick={(e) => {
+                e.stopPropagation();
+                go(-1);
+              }}
+              className="absolute left-3 top-1/2 -translate-y-1/2 grid place-items-center size-9 rounded-full bg-black/60 text-white ring-1 ring-white/15 opacity-0 group-hover:opacity-100 hover:bg-black/80 transition-opacity"
+            >
+              <ChevronLeft className="size-5" />
+            </button>
+            <button
+              type="button"
+              aria-label="Next image"
+              onClick={(e) => {
+                e.stopPropagation();
+                go(1);
+              }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 grid place-items-center size-9 rounded-full bg-black/60 text-white ring-1 ring-white/15 opacity-0 group-hover:opacity-100 hover:bg-black/80 transition-opacity"
+            >
+              <ChevronRight className="size-5" />
+            </button>
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+              {jersey.images.map((_, i) => (
+                <span
+                  key={i}
+                  className={
+                    "h-1 w-4 rounded-full " +
+                    (i === idx ? "bg-white" : "bg-white/30")
+                  }
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+      <div className="space-y-3">
+        <div className="flex justify-between items-start gap-4">
+          <h3 className="text-xl font-medium tracking-tight">{jersey.name}</h3>
+          <span className="text-[10px] font-mono text-vault-faint uppercase whitespace-nowrap pt-1">
+            {jersey.season}
+          </span>
+        </div>
+        <p className="text-sm text-vault-muted text-pretty max-w-[48ch]">{jersey.notes}</p>
+        <div className="pt-4 flex flex-wrap gap-6 text-[10px] uppercase tracking-widest font-semibold text-vault-faint border-t border-vault-line/60">
+          <span>Team: {jersey.team}</span>
+          <span>Type: {jersey.type}</span>
+          <span className="font-mono normal-case tracking-wider">{jersey.inventory}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
 function Index() {
   const [activeEra, setActiveEra] = useState<Era>("All Eras");
   const [activeId, setActiveId] = useState<string>("usa-80");
