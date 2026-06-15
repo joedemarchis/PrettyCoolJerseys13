@@ -1,5 +1,5 @@
-import crottyHomeBack from "@/assets/jersey-crotty-home-back.jpg";
-import crottyHomeFront from "@/assets/jersey-crotty-home-front.jpg";
+import crottyHomeBack from "@/assets/jersey-crotty-home-back.svg";
+import crottyHomeFront from "@/assets/jersey-crotty-home-front.svg";
 import type { Jersey } from "../../../../types";
 
 export const camCrottyHome: Jersey = {
