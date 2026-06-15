@@ -269,7 +269,6 @@ function Index() {
               </div>
             </div>
 
-            {isLeagueSelected && (
               <div className="border-y border-vault-line/60 py-6">
                 <div className="flex flex-col gap-5 lg:flex-row lg:items-end">
                   <label className="flex flex-1 min-w-[220px] flex-col gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-vault-faint">
