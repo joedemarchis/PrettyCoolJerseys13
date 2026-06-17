@@ -100,8 +100,22 @@
   }
 }
 
-img[src*="CrottyHome"] {
+div:has(> img[src*="CrottyHome"]) {
+  aspect-ratio: 1536 / 1372;
   background-color: transparent;
+  outline: 0;
+}
+
+button:has(> img[src*="CrottyHome"]) {
+  aspect-ratio: 1536 / 1372;
+  background-color: transparent;
+}
+
+img[src*="CrottyHome"] {
+  aspect-ratio: 1536 / 1372 !important;
+  background-color: transparent;
+  border-radius: min(1vw, 12px);
   object-fit: contain !important;
+  outline: 0 !important;
   transform: none !important;
 }
