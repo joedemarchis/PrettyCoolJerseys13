@@ -121,8 +121,11 @@ function Index() {
   const [typeFilter, setTypeFilter] = useState("All Types");
   const [seasonFilter, setSeasonFilter] = useState("All Seasons");
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState<"default" | "season" | "team" | "player">("default");
+  type SortField = "default" | "season" | "team" | "player";
+  const [sortBy, setSortBy] = useState<SortField>("default");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const [sortBy2, setSortBy2] = useState<SortField>("default");
+  const [sortDir2, setSortDir2] = useState<"asc" | "desc">("asc");
 
   const isLeagueSelected = activeLeague !== "All Leagues";
 
@@ -176,17 +179,23 @@ function Index() {
       return matchesTeam && matchesType && matchesSeason && matchesSearch;
     });
 
+    const compare = (a: Jersey, b: Jersey, field: SortField) => {
+      if (field === "team") return a.team.localeCompare(b.team);
+      if (field === "player") return a.player.localeCompare(b.player);
+      if (field === "season") return getSeasonYear(a.season) - getSeasonYear(b.season);
+      return 0;
+    };
+
     if (sortBy === "default") return result;
 
-    const dir = sortDir === "asc" ? 1 : -1;
+    const dir1 = sortDir === "asc" ? 1 : -1;
+    const dir2 = sortDir2 === "asc" ? 1 : -1;
     return [...result].sort((a, b) => {
-      let cmp = 0;
-      if (sortBy === "team") cmp = a.team.localeCompare(b.team);
-      else if (sortBy === "player") cmp = a.player.localeCompare(b.player);
-      else if (sortBy === "season") cmp = getSeasonYear(a.season) - getSeasonYear(b.season);
-      return cmp * dir;
+      const primary = compare(a, b, sortBy) * dir1;
+      if (primary !== 0 || sortBy2 === "default" || sortBy2 === sortBy) return primary;
+      return compare(a, b, sortBy2) * dir2;
     });
-  }, [leagueItems, searchTerm, seasonFilter, teamFilter, typeFilter, sortBy, sortDir]);
+  }, [leagueItems, searchTerm, seasonFilter, teamFilter, typeFilter, sortBy, sortDir, sortBy2, sortDir2]);
 
   const hasAdvancedFilters =
     teamFilter !== "All Teams" ||
@@ -347,7 +356,7 @@ function Index() {
                     Sort
                     <select
                       value={sortBy}
-                      onChange={(event) => setSortBy(event.target.value as "default" | "season" | "team" | "player")}
+                      onChange={(event) => setSortBy(event.target.value as SortField)}
                       className="h-11 rounded-sm bg-background px-3 text-sm normal-case tracking-normal text-foreground ring-1 ring-vault-line outline-none transition-colors focus:ring-heritage-red"
                     >
                       <option value="default">Default</option>
@@ -361,7 +370,33 @@ function Index() {
                     type="button"
                     onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
                     title={sortDir === "asc" ? "Ascending" : "Descending"}
-                    className="h-11 w-11 grid place-items-center rounded-sm ring-1 ring-vault-line text-vault-muted hover:text-foreground hover:ring-heritage-red transition-colors"
+                    disabled={sortBy === "default"}
+                    className="h-11 w-11 grid place-items-center rounded-sm ring-1 ring-vault-line text-vault-muted hover:text-foreground hover:ring-heritage-red transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    <ArrowUpDown className="size-4" />
+                  </button>
+
+                  <label className="flex min-w-[140px] flex-col gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-vault-faint">
+                    Then by
+                    <select
+                      value={sortBy2}
+                      onChange={(event) => setSortBy2(event.target.value as SortField)}
+                      disabled={sortBy === "default"}
+                      className="h-11 rounded-sm bg-background px-3 text-sm normal-case tracking-normal text-foreground ring-1 ring-vault-line outline-none transition-colors focus:ring-heritage-red disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      <option value="default">None</option>
+                      {sortBy !== "season" && <option value="season">Season</option>}
+                      {sortBy !== "team" && <option value="team">Team</option>}
+                      {sortBy !== "player" && <option value="player">Player</option>}
+                    </select>
+                  </label>
+
+                  <button
+                    type="button"
+                    onClick={() => setSortDir2((d) => (d === "asc" ? "desc" : "asc"))}
+                    title={sortDir2 === "asc" ? "Ascending" : "Descending"}
+                    disabled={sortBy === "default" || sortBy2 === "default"}
+                    className="h-11 w-11 grid place-items-center rounded-sm ring-1 ring-vault-line text-vault-muted hover:text-foreground hover:ring-heritage-red transition-colors disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     <ArrowUpDown className="size-4" />
                   </button>
