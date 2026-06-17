@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
 import heroCrest from "@/assets/hero-crest.jpg";
 import { jerseys, leagues, type League, type Jersey } from "@/data/jerseys";
 
@@ -105,6 +105,12 @@ function JerseyCard({ jersey }: { jersey: Jersey }) {
   );
 }
 
+function getSeasonYear(season: string): number {
+  const match = season.match(/(\d{4})/);
+  if (match) return parseInt(match[1], 10);
+  return 0;
+}
+
 function uniqueSorted(values: string[]) {
   return Array.from(new Set(values)).sort((a, b) => a.localeCompare(b));
 }
@@ -115,6 +121,8 @@ function Index() {
   const [typeFilter, setTypeFilter] = useState("All Types");
   const [seasonFilter, setSeasonFilter] = useState("All Seasons");
   const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState<"default" | "season" | "team" | "player">("default");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
   const isLeagueSelected = activeLeague !== "All Leagues";
 
@@ -147,7 +155,7 @@ function Index() {
   const filtered = useMemo(() => {
     const normalizedSearch = searchTerm.trim().toLowerCase();
 
-    return leagueItems.filter((jersey) => {
+    const result = leagueItems.filter((jersey) => {
       const matchesTeam = teamFilter === "All Teams" || jersey.team === teamFilter;
       const matchesType = typeFilter === "All Types" || jersey.type === typeFilter;
       const matchesSeason = seasonFilter === "All Seasons" || jersey.season === seasonFilter;
@@ -167,7 +175,18 @@ function Index() {
 
       return matchesTeam && matchesType && matchesSeason && matchesSearch;
     });
-  }, [leagueItems, searchTerm, seasonFilter, teamFilter, typeFilter]);
+
+    if (sortBy === "default") return result;
+
+    const dir = sortDir === "asc" ? 1 : -1;
+    return [...result].sort((a, b) => {
+      let cmp = 0;
+      if (sortBy === "team") cmp = a.team.localeCompare(b.team);
+      else if (sortBy === "player") cmp = a.player.localeCompare(b.player);
+      else if (sortBy === "season") cmp = getSeasonYear(a.season) - getSeasonYear(b.season);
+      return cmp * dir;
+    });
+  }, [leagueItems, searchTerm, seasonFilter, teamFilter, typeFilter, sortBy, sortDir]);
 
   const hasAdvancedFilters =
     teamFilter !== "All Teams" ||
@@ -323,6 +342,29 @@ function Index() {
                       ))}
                     </select>
                   </label>
+
+                  <label className="flex min-w-[140px] flex-col gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-vault-faint">
+                    Sort
+                    <select
+                      value={sortBy}
+                      onChange={(event) => setSortBy(event.target.value as "default" | "season" | "team" | "player")}
+                      className="h-11 rounded-sm bg-background px-3 text-sm normal-case tracking-normal text-foreground ring-1 ring-vault-line outline-none transition-colors focus:ring-heritage-red"
+                    >
+                      <option value="default">Default</option>
+                      <option value="season">Season</option>
+                      <option value="team">Team</option>
+                      <option value="player">Player</option>
+                    </select>
+                  </label>
+
+                  <button
+                    type="button"
+                    onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
+                    title={sortDir === "asc" ? "Ascending" : "Descending"}
+                    className="h-11 w-11 grid place-items-center rounded-sm ring-1 ring-vault-line text-vault-muted hover:text-foreground hover:ring-heritage-red transition-colors"
+                  >
+                    <ArrowUpDown className="size-4" />
+                  </button>
 
                   <button
                     type="button"
