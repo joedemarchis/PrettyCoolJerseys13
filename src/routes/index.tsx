@@ -22,9 +22,6 @@ export const Route = createFileRoute("/")({
       { property: "og:image", content: heroCrest },
       { name: "twitter:image", content: heroCrest },
     ],
-    links: [
-      { rel: "preload", as: "image", href: heroCrest, fetchpriority: "high" },
-    ],
   }),
   component: Index,
 });
