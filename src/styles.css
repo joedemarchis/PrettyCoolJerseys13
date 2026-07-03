@@ -101,18 +101,24 @@
 }
 
 div:has(> img:is([src*="DSC03281"], [src*="DSC03284"])) {
+  aspect-ratio: auto;
   background-color: transparent;
   outline: 0;
 }
 
 button:has(> img:is([src*="DSC03281"], [src*="DSC03284"])) {
+  aspect-ratio: auto;
   background-color: transparent;
 }
 
 img:is([src*="DSC03281"], [src*="DSC03284"]) {
+  aspect-ratio: auto !important;
   background-color: transparent;
   border-radius: min(1vw, 12px);
+  display: block;
+  height: auto !important;
   object-fit: contain !important;
   outline: 0 !important;
   transform: none !important;
+  width: 100%;
 }
