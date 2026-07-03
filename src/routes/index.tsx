@@ -248,6 +248,9 @@ function Index() {
               alt="Macro detail of a vintage hockey jersey crest under low light"
               width={1920}
               height={1024}
+              fetchpriority="high"
+              loading="eager"
+              decoding="async"
               className="w-full aspect-[21/9] object-cover bg-vault-surface outline-1 -outline-offset-1 outline-vault-text/5 rounded-[min(1vw,12px)]"
             />
             <div className="absolute bottom-6 left-6 text-[10px] font-medium uppercase tracking-[0.15em] text-vault-faint">
