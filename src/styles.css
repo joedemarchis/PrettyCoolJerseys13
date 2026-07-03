@@ -100,19 +100,16 @@
   }
 }
 
-div:has(> img[src*="CrottyHome"]) {
-  aspect-ratio: 1536 / 1372;
+div:has(> img:is([src*="DSC03281"], [src*="DSC03284"])) {
   background-color: transparent;
   outline: 0;
 }
 
-button:has(> img[src*="CrottyHome"]) {
-  aspect-ratio: 1536 / 1372;
+button:has(> img:is([src*="DSC03281"], [src*="DSC03284"])) {
   background-color: transparent;
 }
 
-img[src*="CrottyHome"] {
-  aspect-ratio: 1536 / 1372 !important;
+img:is([src*="DSC03281"], [src*="DSC03284"]) {
   background-color: transparent;
   border-radius: min(1vw, 12px);
   object-fit: contain !important;
