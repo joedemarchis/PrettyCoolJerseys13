@@ -1,5 +1,6 @@
 import { fleurDeLisHeavy } from "./chl/nordiques/team-issued/throwback";
 import { willieKnierim1972Retro } from "./ncaa/arizona-state-sun-devils/willie-knierim/1972retro";
+import { tuckerNessMaroon } from "./ncaa/arizona-state-sun-devils/tucker-ness/home";
 import { madhouseRed } from "./ncaa/blackhawks/team-issued/home";
 import { centennialHeritage } from "./ncaa/canadiens/team-issued/away";
 import { camCrottyHome } from "./nhl/arizona-coyotes/cam-crotty/home";
@@ -14,6 +15,7 @@ export const leagues: League[] = ["All Leagues", "NCAA", "NHL", "CHL"];
 
 export const jerseys: Jersey[] = [
   willieKnierim1972Retro,
+  tuckerNessMaroon,
   camCrottyHome,
   empireStateClassic,
   centennialHeritage,
