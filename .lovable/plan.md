@@ -1,26 +1,17 @@
 ## Goal
-Every jersey photo on the homepage grid should display fully (no cropped sleeves), matching how Cam Crotty currently reads. Standardize this in CSS so it applies to all existing and future uploads — no per-photo processing required.
+Every jersey card should look like the Cam Crotty screenshot: the photo sits on a **light gray background** inside the square, not the dark vault surface.
 
-## Approach
-Switch the card image from `object-cover` (which crops edges) to `object-contain` (which fits the whole photo inside the square), and give the container the site's dark vault surface color so any letterbox space blends seamlessly into the card instead of showing as a gray box.
+## Change
+Single file: `src/routes/index.tsx`, `JerseyCard` image container (line ~40).
 
-## Changes
-Single file: `src/routes/index.tsx`, `JerseyCard` component (around lines 40–47).
+- Swap the container background from `bg-vault-surface` (dark) to a light neutral gray that matches the Crotty screenshot (e.g. `bg-neutral-200`).
+- Keep `object-contain` so no photo gets cropped.
+- Keep everything else (aspect-square, rounded corners, hover scale, carousel arrows) unchanged.
 
-1. Image container `<div>`: add `bg-vault-surface` back so padding areas match the site's dark surface.
-2. `<img>`: change `object-cover` → `object-contain`. Keep `aspect-square`, keep `width/height={1024}`, keep hover scale.
-
-Result:
-- Knierim (edge-to-edge photo) → fits fully inside the square, tiny dark inset on the sides that blends with the card.
-- Crotty (already padded) → looks identical to today.
-- Any future upload at any aspect ratio → fits without cropping, dark padding matches surface.
-
-## Technical notes
-- `bg-vault-surface` is the existing semantic token used elsewhere on the page (hero image, filter section), so no new tokens needed.
-- Detail route pages aren't touched — this is the grid-card standard only.
-- No image reprocessing, no data changes, no new dependencies.
+## Result
+- Crotty: unchanged (his photo already has that light gray backdrop baked in — it will blend).
+- Knierim and any edge-to-edge photo: sits centered on the light gray square with matching letterbox padding.
+- Every future upload lands on the same light gray card, no per-image processing.
 
 ## Out of scope
-- Detail page layout
-- Any content/data edits to jersey entries
-- Automated image padding pipeline (rejected in favor of pure CSS)
+Detail pages, hero, filter section, data edits.
