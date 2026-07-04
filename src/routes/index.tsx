@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import heroCrest from "@/assets/hero-crest.jpg";
 import { jerseys, leagues, type League, type Jersey } from "@/data/jerseys";
 
