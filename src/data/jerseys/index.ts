@@ -17,4 +17,4 @@ export const getJerseyById = (jerseyId: string) =>
   jerseys.find((jersey) => jersey.id === jerseyId);
 
 export { default as heroCrest } from "@/assets/hero-crest.jpg";
-export { default as twillDetail } from "@/assets/twill-detail.jpg";
+
